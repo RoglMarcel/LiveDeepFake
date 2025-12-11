@@ -1,0 +1,16 @@
+Python Artefakte
+pycache/
+*.py[cod]
+*$py.class
+venv/
+.env
+Betriebssystem Dateien
+.DS_Store
+Thumbs.db
+WICHTIG: Ignoriere die großen Modell-Dateien
+Wir ignorieren den Inhalt des models Ordners, damit GitHub nicht explodiert
+models/.onnx
+models/.zip
+models/buffalo_l/
+Behalte aber eine .gitkeep Datei, falls der Ordner leer ist (optional)
+!models/.gitkeep
