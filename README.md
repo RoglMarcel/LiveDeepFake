@@ -24,7 +24,7 @@ CUDA Toolkit (empfohlen für NVIDIA GPUs) oder CoreML (macOS)
 
 1. Repository klonen
 
-git clone [https://github.com/RoglMarcel/Deep-Live-Cam-Enhanced.git](https://github.com/RoglMarcel/Deep-Live-Cam-Enhanced.git)
+git clone [https://github.com/RoglMarcel/LiveDeepFake.git](https://github.com/RoglMarcel/LiveDeepFake.git)
 cd Deep-Live-Cam-Enhanced
 
 
