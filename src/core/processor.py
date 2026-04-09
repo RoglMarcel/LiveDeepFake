@@ -6,18 +6,47 @@ from src.structure_adapter.mesh_tracker import MeshTracker
 
 class DeepLiveProcessor:
     def __init__(self):
-        self.providers = onnxruntime.get_available_providers()
-        print(f"DeepLiveCam: Verfügbare Provider: {self.providers}")
-        
+        available = onnxruntime.get_available_providers()
+        print(f"🔍 ONNX Runtime verfügbare Provider: {available}")
+
+        # --- GPU Provider Konfiguration ---
+        # Versuche CUDA zuerst, dann CPU als Fallback
+        if 'CUDAExecutionProvider' in available:
+            self.providers = [
+                ('CUDAExecutionProvider', {
+                    'device_id': 0,
+                    'arena_extend_strategy': 'kSameAsRequested',
+                    'gpu_mem_limit': 4 * 1024 * 1024 * 1024,  # 4 GB VRAM Limit
+                    'cudnn_conv_algo_search': 'DEFAULT',
+                }),
+                'CPUExecutionProvider',
+            ]
+            print("🚀 GPU-Modus: CUDAExecutionProvider aktiv (NVIDIA GPU)")
+        else:
+            self.providers = ['CPUExecutionProvider']
+            print("⚠️ CUDA nicht verfügbar — Fallback auf CPU.")
+            print("   Tipp: Installiere 'onnxruntime-gpu' und CUDA Toolkit für GPU-Beschleunigung.")
+
         # 1. Initialisiere InsightFace Analyser (für Source & Target Detection)
         self.face_analyser = insightface.app.FaceAnalysis(name='buffalo_l', providers=self.providers)
         self.face_analyser.prepare(ctx_id=0, det_size=(640, 640))
-        
+
         # 2. Lade Swapper Modell
         model_path = './models/inswapper_128.onnx'
         self.swapper = insightface.model_zoo.get_model(model_path, providers=self.providers)
+
+        # 3. Bestätige welcher Provider tatsächlich genutzt wird
+        try:
+            session = self.swapper.session if hasattr(self.swapper, 'session') else None
+            if session:
+                active = session.get_providers()
+                print(f"✅ Aktiver Provider für Swapper: {active[0]}")
+            else:
+                print("ℹ️ Provider-Check: Session nicht direkt zugänglich (InsightFace Wrapper)")
+        except Exception:
+            pass
         
-        # 3. Module
+        # 4. Module
         self.mesh_tracker = MeshTracker()
         
     def get_face(self, img_data):

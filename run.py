@@ -53,6 +53,17 @@ def startup_event():
     global processor, stream_cap, proc_thread
     print("🚀 Starte DeepLiveCam System...")
 
+    # GPU Status Check
+    try:
+        import onnxruntime
+        available_providers = onnxruntime.get_available_providers()
+        has_cuda = 'CUDAExecutionProvider' in available_providers
+        print(f"{'🟢' if has_cuda else '🟡'} GPU Status: {'CUDA verfügbar ✅' if has_cuda else 'Nur CPU (kein CUDA gefunden)'}")
+        if not has_cuda:
+            print("   → Für GPU-Beschleunigung: pip install onnxruntime-gpu + CUDA Toolkit installieren")
+    except Exception:
+        pass
+
     try:
         # KI-Modelle laden (InsightFace, ONNX)
         processor = DeepLiveProcessor()
