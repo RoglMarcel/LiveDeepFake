@@ -42,6 +42,10 @@ cd ..
 ### 3. Python Abhängigkeiten installieren (Wähle deine Version)
 
 Es gibt **zwei Varianten** — je nachdem, ob du eine NVIDIA Grafikkarte nutzen möchtest oder nur die CPU.
+Requirements herunterladen (für nur CPU nötig!!!):
+````bash
+pip install -r requirements.txt  
+````
 
 ---
 
@@ -80,7 +84,7 @@ Falls du **keine NVIDIA GPU** hast (AMD, Intel oder Laptop ohne dedizierte GPU),
 ```bash
 python -m pip uninstall onnxruntime onnxruntime-gpu numpy opencv-python mediapipe protobuf -y
 python -m pip install "numpy<2" "opencv-python<4.10"
-python -m pip install fastapi uvicorn python-multipart mediapipe insightface onnxruntime
+python -m pip install fastapi uvicorn python-multipart mediapipe insightface onnxruntime --user
 ```
 
 *(Hinweis: Aktiviere später im UI den Schalter "Fast Mode", damit das Bild trotz schwächerer CPU nicht einfriert!)*
